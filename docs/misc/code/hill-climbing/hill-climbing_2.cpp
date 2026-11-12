@@ -1,8 +1,10 @@
 #include <cmath>
-#include <cstdio>
-const int N = 10005;
+#include <iomanip>
+#include <iostream>
+constexpr int N = 10005;
 int n, x[N], y[N], w[N];
 double ansx, ansy;
+
 void hillclimb() {
   double t = 1000;
   while (t > 1e-8) {
@@ -20,14 +22,17 @@ void hillclimb() {
       t *= 0.97;
   }
 }
+
 int main() {
-  scanf("%d", &n);
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+  std::cin >> n;
   for (int i = 1; i <= n; ++i) {
-    scanf("%d%d%d", &x[i], &y[i], &w[i]);
+    std::cin >> x[i] >> y[i] >> w[i];
     ansx += x[i], ansy += y[i];
   }
   ansx /= n, ansy /= n;
   hillclimb();
-  printf("%.3lf %.3lf\n", ansx, ansy);
+  std::cout << std::fixed << std::setprecision(3) << ansx << ' ' << ansy
+            << '\n';
   return 0;
 }

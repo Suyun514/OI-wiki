@@ -1,8 +1,11 @@
-#include <bits/stdc++.h>
+#include <cmath>
+#include <iomanip>
+#include <iostream>
 using namespace std;
 double ans[10001], cans[100001], dis[10001], tot, f[1001][1001];
 int n;
-double check() {
+
+void check() {
   tot = 0;
   for (int i = 1; i <= n + 1; i++) {
     dis[i] = 0;
@@ -18,6 +21,7 @@ double check() {
       cans[j] += (dis[i] - tot) * (f[i][j] - ans[j]) /
                  tot;  // 对于每个维度把修改值更新掉，欧氏距离差*差值贡献
 }
+
 int main() {
   cin >> n;
   for (int i = 1; i <= n + 1; i++)
@@ -30,5 +34,6 @@ int main() {
     check();
     for (int i = 1; i <= n; i++) ans[i] += cans[i] * t;  // 修改
   }
-  for (int i = 1; i <= n; i++) printf("%.3f ", ans[i]);
+  cout << fixed << setprecision(3);
+  for (int i = 1; i <= n; i++) cout << ans[i] << ' ';
 }

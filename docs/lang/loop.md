@@ -1,6 +1,6 @@
-有时，我们需要做一件事很多遍，为了不写过多重复的代码，我们需要循环。
+有时，我们需要做一件事很多遍，为了不写过多重复的代码，我们需要循环．
 
-有时，循环的次数不是一个常量，那么我们无法将代码重复多遍，必须使用循环。
+有时，循环的次数不是一个常量，那么我们无法将代码重复多遍，必须使用循环．
 
 ## for 语句
 
@@ -24,7 +24,7 @@ for (int i = 1; i <= n; ++i) {
 }
 ```
 
-for 语句的三个部分中，任何一个部分都可以省略。其中，若省略了判断条件，相当于判断条件永远为真。
+for 语句的三个部分中，任何一个部分都可以省略．其中，若省略了判断条件，相当于判断条件永远为真．
 
 ## while 语句
 
@@ -66,13 +66,13 @@ do {
 
 ![](images/do-while-loop.svg)
 
-与 while 语句的区别在于，do...while 语句是先执行循环体再进行判断的。
+与 while 语句的区别在于，do...while 语句是先执行循环体再进行判断的．
 
 e.g. 枚举排列：
 
 ```cpp
 do {
-  // do someting...
+  // do something...
 } while (next_permutation(a + 1, a + n + 1));
 ```
 
@@ -94,7 +94,7 @@ while (statement2) {
 }
 ```
 
-在 statement4 中没有 `continue` 语句（见下文）的时候是等价的，但是下面一种方法很少用到。
+在 statement4 中没有 `continue` 语句（见下文）的时候是等价的，但是下面一种方法很少用到．
 
 ```cpp
 // while 语句
@@ -111,7 +111,7 @@ do {
 } while (statement2);
 ```
 
-在 statement1 中没有 `continue` 语句的时候这两种方式也也是等价的。
+在 statement1 中没有 `continue` 语句的时候这两种方式也是等价的．
 
 ```cpp
 while (1) {
@@ -123,40 +123,31 @@ for (;;) {
 }
 ```
 
-这两种方式都是永远循环下去。（可以使用 `break`（见下文）退出。）
+这两种方式都是永远循环下去．（可以使用 `break`（见下文）退出．）
 
 可以看出，三种语句可以彼此代替，但一般来说，语句的选用遵守以下原则：
 
-1. 循环过程中有个固定的增加步骤（最常见的是枚举）时，使用 for 语句；
-2. 只确定循环的终止条件时，使用 while 语句；
-3. 使用 while 语句时，若要先执行循环体再进行判断，使用 do...while 语句。一般很少用到，常用场景是用户输入。
+1.  循环过程中有个固定的增加步骤（最常见的是枚举）时，使用 for 语句；
+2.  只确定循环的终止条件时，使用 while 语句；
+3.  使用 while 语句时，若要先执行循环体再进行判断，使用 do...while 语句．一般很少用到，常用场景是用户输入．
 
 ## break 与 continue 语句
 
-break 语句的作用是退出循环。
+break 语句的作用是退出循环．
 
-continue 语句的作用是跳过循环体的余下部分，回到循环的开头（for 语句的更新，while 语句的判断条件）。
+continue 语句的作用是跳过循环体的余下部分．下面以 continue 语句在 do...while 语句中的使用为例：
 
 ```cpp
-for (int i = 1; i <= 10; ++i) {
-  std::cout << i << std::endl;
-  if (i > 3) break;
-  if (i > 2) continue;
-  std::cout << i << std::endl;
-}
+do {
+  // do something...
+  continue;  // 等价于 goto END;
+// do something...
+END:;
+} while (statement);
 
-/*
-输出如下：
-1
-1
-2
-2
-3
-4
-*/
 ```
 
-break 与 continue 语句均可在三种循环语句的循环体中使用。
+break 与 continue 语句均可在三种循环语句的循环体中使用．
 
 一般来说，break 与 continue 语句用于让代码的逻辑更加清晰，例如：
 
@@ -185,13 +176,13 @@ for (int i = 1; i <= n; ++i) {
 ```
 
 ```cpp
-// for 语句判断条件复杂，没有体现“枚举”的本质
+// for 语句判断条件复杂，没有体现「枚举」的本质
 
 for (int i = l; i <= r && i % 10 != 0; ++i) {
   // do something...
 }
 
-// for 语句用于枚举，break 用于“到何时为止”
+// for 语句用于枚举，break 用于「到何时为止」
 
 for (int i = l; i <= r; ++i) {
   if (i % 10 == 0) break;

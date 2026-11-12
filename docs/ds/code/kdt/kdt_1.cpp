@@ -1,22 +1,29 @@
 #include <algorithm>
 #include <cmath>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <iomanip>
+#include <iostream>
 using namespace std;
-const int maxn = 200010;
-int n, d[maxn], lc[maxn], rc[maxn];
+constexpr int MAXN = 200010;
+int n, d[MAXN], lc[MAXN], rc[MAXN];
 double ans = 2e18;
+
 struct node {
   double x, y;
-} s[maxn];
-double L[maxn], R[maxn], D[maxn], U[maxn];
+} s[MAXN];
+
+double L[MAXN], R[MAXN], D[MAXN], U[MAXN];
+
 double dist(int a, int b) {
   return (s[a].x - s[b].x) * (s[a].x - s[b].x) +
          (s[a].y - s[b].y) * (s[a].y - s[b].y);
 }
+
 bool cmp1(node a, node b) { return a.x < b.x; }
+
 bool cmp2(node a, node b) { return a.y < b.y; }
+
 void maintain(int x) {
   L[x] = R[x] = s[x].x;
   D[x] = U[x] = s[x].y;
@@ -27,8 +34,13 @@ void maintain(int x) {
     L[x] = min(L[x], L[rc[x]]), R[x] = max(R[x], R[rc[x]]),
     D[x] = min(D[x], D[rc[x]]), U[x] = max(U[x], U[rc[x]]);
 }
+
 int build(int l, int r) {
-  if (l >= r) return 0;
+  if (l > r) return 0;
+  if (l == r) {
+    maintain(l);
+    return l;
+  }
   int mid = (l + r) >> 1;
   double avx = 0, avy = 0, vax = 0, vay = 0;  // average variance
   for (int i = l; i <= r; i++) avx += s[i].x, avy += s[i].y;
@@ -45,6 +57,7 @@ int build(int l, int r) {
   maintain(mid);
   return mid;
 }
+
 double f(int a, int b) {
   double ret = 0;
   if (L[b] > s[a].x) ret += (L[b] - s[a].x) * (L[b] - s[a].x);
@@ -53,6 +66,7 @@ double f(int a, int b) {
   if (U[b] < s[a].y) ret += (s[a].y - U[b]) * (s[a].y - U[b]);
   return ret;
 }
+
 void query(int l, int r, int x) {
   if (l > r) return;
   int mid = (l + r) >> 1;
@@ -72,11 +86,13 @@ void query(int l, int r, int x) {
     if (distr < ans) query(mid + 1, r, x);
   }
 }
+
 int main() {
-  scanf("%d", &n);
-  for (int i = 1; i <= n; i++) scanf("%lf%lf", &s[i].x, &s[i].y);
+  cin.tie(nullptr)->sync_with_stdio(false);
+  cin >> n;
+  for (int i = 1; i <= n; i++) cin >> s[i].x >> s[i].y;
   build(1, n);
   for (int i = 1; i <= n; i++) query(1, n, i);
-  printf("%.4lf\n", sqrt(ans));
+  cout << fixed << setprecision(4) << sqrt(ans) << '\n';
   return 0;
 }

@@ -1,13 +1,17 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cassert>
+#include <cstring>
+#include <iostream>
 using namespace std;
-typedef long long T_state;
-typedef int T_key;
-const int N = 8;
+using T_state = long long;
+using T_key = int;
+constexpr int N = 8;
 int n, m;
 char A[N + 1][N + 1], B[N + 1][N + 1];
-const int Offset = 5, Mask = (1 << Offset) - 1;
+constexpr int Offset = 5, Mask = (1 << Offset) - 1;
 int c[N + 2];
 int b[N + 2], bb[N + 3];
+
 T_state encode() {
   T_state s = 0;
   memset(bb, -1, sizeof(bb));
@@ -20,6 +24,7 @@ T_state encode() {
   }
   return s;
 }
+
 void decode(T_state s) {
   for (int i = 0; i < m + 1; i++) {
     b[i] = s & Mask;
@@ -28,7 +33,9 @@ void decode(T_state s) {
     s >>= Offset;
   }
 }
-const int Prime = 9979, MaxSZ = 1 << 20;
+
+constexpr int Prime = 9979, MaxSZ = 1 << 20;
+
 template <class T_state, class T_key>
 struct hashTable {
   int head[Prime];
@@ -36,10 +43,12 @@ struct hashTable {
   T_state state[MaxSZ];
   T_key key[MaxSZ];
   int pre[MaxSZ];
+
   void clear() {
     sz = 0;
     memset(head, -1, sizeof(head));
   }
+
   void push(T_state s, T_key d, T_state u) {
     int x = s % Prime;
     for (int i = head[x]; ~i; i = next[i]) {
@@ -51,11 +60,14 @@ struct hashTable {
     state[sz] = s, key[sz] = d, pre[sz] = u;
     next[sz] = head[x], head[x] = sz++;
   }
+
   void roll() {
     for (int ii = 0; ii < sz; ii++) state[ii] <<= Offset;
   }
 };
+
 hashTable<T_state, T_key> _H, H[N][N], *H0, *H1;
+
 bool ok(int i, int j, int cc) {
   if (cc == c[j + 1]) return true;
   int up = b[j + 1];
@@ -75,6 +87,7 @@ bool ok(int i, int j, int cc) {
   }
   return true;
 }
+
 void trans(int i, int j, int u, int cc) {
   decode(H0->state[u]);
   int lf = j ? c[j - 1] : -1, lu = b[j] ? c[j] : -1,
@@ -100,10 +113,12 @@ void trans(int i, int j, int u, int cc) {
   if (!ok(i, j, cc)) return;  // 判断是否会因生成封闭的连通块导致不合法
   H1->push(encode(), H0->key[u], u);
 }
+
 void init() {
   cin >> n >> m;
-  for (int i = 0; i < n; i++) scanf("%s", A[i]);
+  for (int i = 0; i < n; i++) cin >> A[i];
 }
+
 void solve() {
   H1 = &_H, H1->clear(), H1->push(0, 1, 0);
   for (int i = 0; i < n; i++) {
@@ -117,6 +132,7 @@ void solve() {
     H1->roll();
   }
 }
+
 void print() {
   T_key z = 0;
   int u;
@@ -138,11 +154,13 @@ void print() {
         u = H[i][j].pre[u];
       }
     }
-    for (int i = 0; i < n; i++) puts(B[i]);
+    for (int i = 0; i < n; i++) cout << B[i] << '\n';
   }
-  puts("");
+  cout << '\n';
 }
+
 int main() {
+  cin.tie(nullptr)->sync_with_stdio(false);
   int T;
   cin >> T;
   while (T--) {

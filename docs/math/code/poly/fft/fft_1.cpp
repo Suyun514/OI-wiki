@@ -1,25 +1,30 @@
 #include <cmath>
-#include <cstdio>
 #include <cstring>
 #include <iostream>
 using namespace std;
 const double PI = acos(-1.0);
+
 struct Complex {
   double x, y;
+
   Complex(double _x = 0.0, double _y = 0.0) {
     x = _x;
     y = _y;
   }
+
   Complex operator-(const Complex &b) const {
     return Complex(x - b.x, y - b.y);
   }
+
   Complex operator+(const Complex &b) const {
     return Complex(x + b.x, y + b.y);
   }
+
   Complex operator*(const Complex &b) const {
     return Complex(x * b.x - y * b.y, x * b.y + y * b.x);
   }
 };
+
 /*
  * 进行 FFT 和 IFFT 前的反置变换
  * 位置 i 和 i 的二进制反转后的位置互换
@@ -39,6 +44,7 @@ void change(Complex y[], int len) {
     if (j < k) j += k;
   }
 }
+
 /*
  * 做 FFT
  *len 必须是 2^k 形式
@@ -66,13 +72,13 @@ void fft(Complex y[], int len, int on) {
   }
 }
 
-const int MAXN = 200020;
+constexpr int MAXN = 200020;
 Complex x1[MAXN], x2[MAXN];
 char str1[MAXN / 2], str2[MAXN / 2];
 int sum[MAXN];
 
 int main() {
-  while (scanf("%s%s", str1, str2) == 2) {
+  while (cin >> str1 >> str2) {
     int len1 = strlen(str1);
     int len2 = strlen(str2);
     int len = 1;
@@ -92,9 +98,10 @@ int main() {
     }
     len = len1 + len2 - 1;
     while (sum[len] == 0 && len > 0) len--;
-    for (int i = len; i >= 0; i--) printf("%c", sum[i] + '0');
-    printf("\n");
+    for (int i = len; i >= 0; i--) cout << char(sum[i] + '0');
+    cout << '\n';
   }
   return 0;
 }
-//加油加油！
+
+// 加油加油！

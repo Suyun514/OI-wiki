@@ -1,12 +1,14 @@
 #include <algorithm>
-#include <cstdio>
 #include <cstring>
+#include <iostream>
 using namespace std;
-const int maxn = 100010;
-const int inf = 2e9;
-const int ddd = 6000010;
+constexpr int MAXN = 100010;
+constexpr int inf = 2e9;
+constexpr int ddd = 6000010;
+
 struct Segtree {
-  int cnt, rt[maxn], sum[ddd], lc[ddd], rc[ddd];
+  int cnt, rt[MAXN], sum[ddd], lc[ddd], rc[ddd];
+
   void update(int& o, int l, int r, int x, int v) {
     if (!o) o = ++cnt;
     if (l == r) {
@@ -20,6 +22,7 @@ struct Segtree {
       update(rc[o], mid + 1, r, x, v);
     sum[o] = sum[lc[o]] + sum[rc[o]];
   }
+
   int query(int o, int l, int r, int ql, int qr) {
     if (!o || r < ql || l > qr) return 0;
     if (ql <= l && r <= qr) return sum[o];
@@ -27,20 +30,25 @@ struct Segtree {
     return query(lc[o], l, mid, ql, qr) + query(rc[o], mid + 1, r, ql, qr);
   }
 } dist, ch;
-int n, m, val[maxn], u, v, op, x, y, lstans;
-int cur, h[maxn * 2], nxt[maxn * 2], p[maxn * 2];
+
+int n, m, val[MAXN], u, v, op, x, y, lstans;
+int cur, h[MAXN * 2], nxt[MAXN * 2], p[MAXN * 2];
+
 void add_edge(int x, int y) {
   cur++;
   nxt[cur] = h[x];
   h[x] = cur;
   p[cur] = y;
 }
+
 struct LCA {
-  int dep[maxn], lg[maxn], fa[maxn][20];
+  int dep[MAXN], lg[MAXN], fa[MAXN][20];
+
   void dfs(int x, int f) {
     for (int j = h[x]; j; j = nxt[j])
       if (p[j] != f) dep[p[j]] = dep[x] + 1, fa[p[j]][0] = x, dfs(p[j], x);
   }
+
   void init() {
     dep[1] = 1;
     dfs(1, -1);
@@ -48,6 +56,7 @@ struct LCA {
     for (int j = 1; j <= lg[n]; j++)
       for (int i = 1; i <= n; i++) fa[i][j] = fa[fa[i][j - 1]][j - 1];
   }
+
   int query(int x, int y) {
     if (dep[x] > dep[y]) swap(x, y);
     int k = dep[y] - dep[x];
@@ -59,11 +68,14 @@ struct LCA {
       if (fa[x][i] != fa[y][i]) x = fa[x][i], y = fa[y][i];
     return fa[x][0];
   }
+
   int dist(int x, int y) { return dep[x] + dep[y] - 2 * dep[query(x, y)]; }
 } lca;
-int rt, sum, siz[maxn], maxx[maxn], fa[maxn];
-int d[maxn][20], dep[maxn];
-bool vis[maxn];
+
+int rt, sum, siz[MAXN], maxx[MAXN], fa[MAXN];
+int d[MAXN][20], dep[MAXN];
+bool vis[MAXN];
+
 void calcsiz(int x, int fa) {
   siz[x] = 1;
   maxx[x] = 0;
@@ -78,16 +90,19 @@ void calcsiz(int x, int fa) {
   if (maxx[x] < maxx[rt])
     rt = x;  // 这里不能写 <= ，保证在第二次 calcsiz 时 rt 不改变
 }
+
 void dfs1(int x, int fa, int y, int d) {
   ch.update(ch.rt[y], 0, n, d, val[x]);
   for (int j = h[x]; j; j = nxt[j])
     if (p[j] != fa && !vis[p[j]]) dfs1(p[j], x, y, d + 1);
 }
+
 void dfs2(int x, int fa, int y, int d) {
   dist.update(dist.rt[y], 0, n, d, val[x]);
   for (int j = h[x]; j; j = nxt[j])
     if (p[j] != fa && !vis[p[j]]) dfs2(p[j], x, y, d + 1);
 }
+
 void pre(int x) {
   vis[x] = true;  // 表示在之后的过程中不考虑 x 这个点
   dfs2(x, -1, x, 0);
@@ -104,11 +119,12 @@ void pre(int x) {
       pre(rt);  // 记录点分树上的父亲
     }
 }
+
 int main() {
-  scanf("%d%d", &n, &m);
-  for (int i = 1; i <= n; i++) scanf("%d", val + i);
-  for (int i = 1; i < n; i++)
-    scanf("%d%d", &u, &v), add_edge(u, v), add_edge(v, u);
+  cin.tie(nullptr)->sync_with_stdio(false);
+  cin >> n >> m;
+  for (int i = 1; i <= n; i++) cin >> val[i];
+  for (int i = 1; i < n; i++) cin >> u >> v, add_edge(u, v), add_edge(v, u);
   lca.init();
   rt = 0;
   maxx[rt] = inf;
@@ -116,11 +132,10 @@ int main() {
   calcsiz(1, -1);
   calcsiz(rt, -1);
   pre(rt);
-  // for(int i=1;i<=n;i++)printf("%d ",fa[i]);printf("\n");
   for (int i = 1; i <= n; i++)
     for (int j = i; j; j = fa[j]) d[i][dep[i] - dep[j]] = lca.dist(i, j);
   while (m--) {
-    scanf("%d%d%d", &op, &x, &y);
+    cin >> op >> x >> y;
     x ^= lstans;
     y ^= lstans;
     if (op == 0) {
@@ -131,7 +146,7 @@ int main() {
         lstans += dist.query(dist.rt[fa[i]], 0, n, 0, y - nww);
         lstans -= ch.query(ch.rt[i], 0, n, 0, y - nww);
       }
-      printf("%d\n", lstans);
+      cout << lstans << '\n';
     }
     if (op == 1) {
       int nww = 0;

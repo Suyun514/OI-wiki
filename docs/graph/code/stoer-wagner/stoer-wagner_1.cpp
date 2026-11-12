@@ -1,10 +1,14 @@
-#include <bits/stdc++.h>
+#include <cstring>
+#include <iostream>
 using namespace std;
-const int N = 601;
+constexpr int N = 601;
 int fa[N], siz[N], edge[N][N];
+
 int find(int x) { return fa[x] == x ? x : fa[x] = find(fa[x]); }
+
 int dist[N], vis[N], bin[N];
 int n, m;
+
 int contract(int &s, int &t) {  // Find s,t
   memset(dist, 0, sizeof(dist));
   memset(vis, false, sizeof(vis));
@@ -27,7 +31,9 @@ int contract(int &s, int &t) {  // Find s,t
   }
   return mincut;
 }
-const int inf = 0x3f3f3f3f;
+
+constexpr int inf = 0x3f3f3f3f;
+
 int Stoer_Wagner() {
   int mincut, i, j, s, t, ans;
   for (mincut = inf, i = 1; i < n; i++) {
@@ -40,8 +46,9 @@ int Stoer_Wagner() {
   }
   return mincut;
 }
+
 int main() {
-  ios::sync_with_stdio(0), cin.tie(0);
+  ios::sync_with_stdio(false), cin.tie(nullptr);
   cin >> n >> m;
   if (m < n - 1) {
     cout << 0;

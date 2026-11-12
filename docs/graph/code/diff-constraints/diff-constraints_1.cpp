@@ -1,34 +1,38 @@
-#include <algorithm>
-#include <cstdio>
 #include <cstring>
+#include <iostream>
 #include <queue>
 using namespace std;
+
 struct edge {
   int v, w, next;
 } e[40005];
+
 int head[10005], vis[10005], tot[10005], cnt;
 long long ans, dist[10005];
 queue<int> q;
-inline void addedge(int u, int v, int w) {  //加边
+
+void addedge(int u, int v, int w) {  // 加边
   e[++cnt].v = v;
   e[cnt].w = w;
   e[cnt].next = head[u];
   head[u] = cnt;
 }
+
 int main() {
+  cin.tie(nullptr)->sync_with_stdio(false);
   int n, m;
-  scanf("%d%d", &n, &m);
+  cin >> n >> m;
   for (int i = 1; i <= m; i++) {
     int op, x, y, z;
-    scanf("%d", &op);
+    cin >> op;
     if (op == 1) {
-      scanf("%d%d%d", &x, &y, &z);
+      cin >> x >> y >> z;
       addedge(y, x, z);
     } else if (op == 2) {
-      scanf("%d%d%d", &x, &y, &z);
+      cin >> x >> y >> z;
       addedge(x, y, -z);
     } else {
-      scanf("%d%d", &x, &y);
+      cin >> x >> y;
       addedge(x, y, 0);
       addedge(y, x, 0);
     }
@@ -38,7 +42,7 @@ int main() {
   dist[0] = 0;
   vis[0] = 1;
   q.push(0);
-  while (!q.empty()) {  //判负环，看上面的
+  while (!q.empty()) {  // 判负环，看上面的
     int cur = q.front();
     q.pop();
     vis[cur] = 0;
@@ -49,13 +53,13 @@ int main() {
           vis[e[i].v] = 1;
           q.push(e[i].v);
           tot[e[i].v]++;
-          if (tot[e[i].v] >= n) {
-            puts("No");
+          if (tot[e[i].v] >= n + 1) {
+            cout << "No\n";
             return 0;
           }
         }
       }
   }
-  puts("Yes");
+  cout << "Yes\n";
   return 0;
 }

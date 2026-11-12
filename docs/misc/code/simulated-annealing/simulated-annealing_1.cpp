@@ -1,13 +1,15 @@
 #include <cmath>
-#include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <iomanip>
+#include <iostream>
 
-const int N = 10005;
+constexpr int N = 10005;
 int n, x[N], y[N], w[N];
 double ansx, ansy, dis;
 
 double Rand() { return (double)rand() / RAND_MAX; }
+
 double calc(double xx, double yy) {
   double res = 0;
   for (int i = 1; i <= n; ++i) {
@@ -17,6 +19,7 @@ double calc(double xx, double yy) {
   if (res < dis) dis = res, ansx = xx, ansy = yy;
   return res;
 }
+
 void simulateAnneal() {
   double t = 100000;
   double nowx = ansx, nowy = ansy;
@@ -33,15 +36,18 @@ void simulateAnneal() {
     calc(nxtx, nxty);
   }
 }
+
 int main() {
-  srand(time(0));
-  scanf("%d", &n);
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+  srand(0);  // 注意，在实际使用中，不应使用固定的随机种子。
+  std::cin >> n;
   for (int i = 1; i <= n; ++i) {
-    scanf("%d%d%d", &x[i], &y[i], &w[i]);
+    std::cin >> x[i] >> y[i] >> w[i];
     ansx += x[i], ansy += y[i];
   }
   ansx /= n, ansy /= n, dis = calc(ansx, ansy);
   simulateAnneal();
-  printf("%.3lf %.3lf\n", ansx, ansy);
+  std::cout << std::fixed << std::setprecision(3) << ansx << ' ' << ansy
+            << '\n';
   return 0;
 }

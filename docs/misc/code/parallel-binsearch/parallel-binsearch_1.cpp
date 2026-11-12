@@ -1,12 +1,13 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
 using namespace std;
-const int N = 200020;
-const int INF = 1e9;
+constexpr int N = 200020;
 int n, m;
 int ans[N];
 // BIT begin
 int t[N];
 int a[N];
+
 int sum(int p) {
   int ans = 0;
   while (p) {
@@ -15,17 +16,21 @@ int sum(int p) {
   }
   return ans;
 }
+
 void add(int p, int x) {
   while (p <= n) {
     t[p] += x;
     p += p & (-p);
   }
 }
+
 // BIT end
 int tot = 0;
+
 struct Query {
   int l, r, k, id, type;  // set values to -1 when they are not used!
 } q[N * 2], q1[N * 2], q2[N * 2];
+
 void solve(int l, int r, int ql, int qr) {
   if (ql > qr) return;
   if (l == r) {
@@ -60,14 +65,17 @@ void solve(int l, int r, int ql, int qr) {
   solve(l, mid, ql, cnt1 + ql - 1);
   solve(mid + 1, r, cnt1 + ql, qr);
 }
+
 pair<int, int> b[N];
 int toRaw[N];
+
 int main() {
-  scanf("%d%d", &n, &m);
+  cin.tie(nullptr)->sync_with_stdio(false);
+  cin >> n >> m;
   // read and discrete input data
   for (int i = 1; i <= n; i++) {
     int x;
-    scanf("%d", &x);
+    cin >> x;
     b[i].first = x;
     b[i].second = i;
   }
@@ -83,9 +91,9 @@ int main() {
   }
   for (int i = 1; i <= m; i++) {
     int l, r, k;
-    scanf("%d%d%d", &l, &r, &k);
+    cin >> l >> r >> k;
     q[++tot] = {l, r, k, i, 2};
   }
   solve(0, cnt + 1, 1, tot);
-  for (int i = 1; i <= m; i++) printf("%d\n", toRaw[ans[i]]);
+  for (int i = 1; i <= m; i++) cout << toRaw[ans[i]] << '\n';
 }

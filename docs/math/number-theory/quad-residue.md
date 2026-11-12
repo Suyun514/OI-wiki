@@ -1,273 +1,550 @@
-一个数 $a$，如果不是 $p$ 的倍数且模 $p$ 同余于某个数的平方，则称 $a$ 为模 $p$ 的 **二次剩余**。而一个不是 $p$ 的倍数的数 $b$，不同余于任何数的平方，则称 $b$ 为模 $p$ 的 **非二次剩余**。
+author: hly1204, ShaoChenHeng, Chrogeek, Enter-tainer, Great-designer, iamtwz, monkeysui, nanmenyangde, rgw2010, sshwy, StudyingFather, TachikakaMin, Tiphereth-A, Xeonacid, xyf007, marscheng1, aberter0x3f
 
-对二次剩余求解，也就是对常数 $a$ 解下面的这个方程：
+## 引入
+
+二次剩余可以认为是在讨论求模意义下 **开平方** 运算的可行性．对于更高次方的开方可参见 [k 次剩余](./residue.md)．
+
+## 定义
+
+???+ abstract "二次剩余"
+    令整数 $a$，$p$ 满足 $(a,p)=1$，若存在整数 $x$ 使得
+    
+    $$
+    x^2\equiv a\pmod p,
+    $$
+    
+    则称 $a$ 为模 $p$ 的二次剩余，否则称 $a$ 为模 $p$ 的二次非剩余．后文可能在模 $p$ 显然的情况下简写成二次（非）剩余．
+
+## Euler 判别法
+
+当模数为奇素数时，我们有如下定理：
+
+???+ abstract "Euler 判别法"
+    对奇素数 $p$ 和满足 $(a,p)=1$ 的整数 $a$，有
+    
+    $$
+    a^{\frac{p-1}{2}}\equiv\begin{cases}
+        1 \pmod p,  & (\exists x\in\mathbf{Z}),~~a\equiv x^2\pmod p,\\
+        -1 \pmod p, & \text{otherwise}.\\
+    \end{cases}
+    $$
+    
+    即对上述的 $p$ 和 $a$，
+    
+    1.  $a$ 是 $p$ 的二次剩余当且仅当 $a^{\frac{p-1}{2}}\equiv 1 \pmod p$.
+    2.  $a$ 是 $p$ 的二次非剩余当且仅当 $a^{\frac{p-1}{2}}\equiv -1 \pmod p$.
+
+??? note "证明"
+    首先由 [Fermat 小定理](./fermat.md#费马小定理) 有 $a^{p-1}\equiv 1\pmod p$，故
+    
+    $$
+    \left(a^{\frac{p-1}{2}}+1\right)\left(a^{\frac{p-1}{2}}-1\right)\equiv 0\pmod p,
+    $$
+    
+    从而对任意满足 $(a,p)=1$ 的 $a$ 均有 $a^{(p-1)/2}\equiv \pm 1\pmod p.$
+    
+    另外由 $p$ 是奇素数，我们有：
+    
+    $$
+    x^{p-1}-a^{\frac{p-1}{2}}={\left(x^2\right)}^{\frac{p-1}{2}}-a^{\frac{p-1}{2}}=(x^2-a)P(x),
+    $$
+    
+    其中 $P(x)$ 是某个整系数多项式，进而：
+    
+    $$
+    \begin{aligned}
+        x^p-x&=x\left(x^{p-1}-a^{\frac{p-1}{2}}\right)+x\left(a^{\frac{p-1}{2}}-1\right)\\
+        &=(x^2-a)xP(x)+\left(a^{\frac{p-1}{2}}-1\right)x.\\
+    \end{aligned}
+    $$
+    
+    由 [同余方程的定理 5](./congruence-equation.md#素数模同余方程) 可知，$a$ 是模 $p$ 的二次剩余当且仅当 $a^{(p-1)/2}\equiv 1\pmod p$. 进而 $a$ 是模 $p$ 的非二次剩余当且仅当 $a^{(p-1)/2}\equiv -1\pmod p$.
+
+基于 Euler 判别法，我们可以得到如下推论：
+
+???+ note "二次剩余的数量"
+    对于奇素数 $p$，模 $p$ 意义下二次剩余和二次非剩余均有 $\dfrac{p-1}{2}$ 个．
+
+??? note "证明"
+    根据 Euler 判别法，考虑 $a^{\frac{p-1}{2}}\equiv 1\pmod p.$
+    
+    注意到 $\dfrac{p-1}{2}\mid (p-1)$，由 [同余方程的定理 6](./congruence-equation.md#素数模同余方程) 可知 $a^{\frac{p-1}{2}}\equiv 1\pmod p$ 有 $\dfrac{p-1}{2}$ 个解．所以模 $p$ 意义下二次剩余和二次非剩余均有 $\dfrac{p-1}{2}$ 个．
+
+## Legendre 符号
+
+为了方便接下来的讨论，我们引入如下记号：
+
+???+ abstract "Legendre 符号"
+    对 **奇素数**  $p$ 和整数 $a$，定义 Legendre 符号如下：
+    
+    $$
+    \left(\frac{a}{p}\right)=\begin{cases}
+        0,  & p\mid a,\\
+        1,  & (p\nmid a) \land ((\exists x\in\mathbf{Z}),~~a\equiv x^2\pmod p),\\
+        -1, & \text{otherwise}.\\
+    \end{cases}
+    $$
+
+即对于 $(a,p)=1$ 的 $a$，
+
+-   $a$ 是模 $p$ 的二次剩余当且仅当 $\left(\dfrac{a}{p}\right)=1.$
+-   $a$ 是模 $p$ 的二次非剩余当且仅当 $\left(\dfrac{a}{p}\right)=-1.$
+
+下表为部分 Legendre 符号的值
+
+![](./images/quad_residue.svg)
+
+### 性质
+
+1.  对任意整数 $a$，
+
+    $$
+    a^{\frac{p-1}{2}}\equiv \left(\frac{a}{p}\right)\pmod p.
+    $$
+
+    进一步，我们有推论：
+
+    -   $$
+        \left(\dfrac{1}{p}\right)=1.
+        $$
+    -   $$
+        \left(\dfrac{-1}{p}\right)=(-1)^{\frac{p-1}{2}}=\begin{cases}
+            1,  & p\equiv 1\pmod 4,\\
+            -1, & p\equiv 3\pmod 4.
+            \end{cases}
+        $$
+
+2.  $a_1\equiv a_2\pmod p\implies \left(\dfrac{a_1}{p}\right)=\left(\dfrac{a_2}{p}\right).$
+
+3.  （[完全积性](./basic.md#积性函数)）对任意整数 $a_1,a_2$，
+
+    $$
+    \left(\frac{a_1a_2}{p}\right)=\left(\frac{a_1}{p}\right)\left(\frac{a_2}{p}\right).
+    $$
+
+    我们有推论：对整数 $a,b$，$p\nmid b$ 有
+
+    $$
+    \left(\frac{ab^2}{p}\right)=\left(\frac{a}{p}\right).
+    $$
+
+4.  $$
+    \left(\frac{2}{p}\right)=(-1)^{\frac{p^2-1}{8}}=\begin{cases}
+            1,  & p\equiv \pm 1\pmod 8, \\
+            -1, & p\equiv \pm 3\pmod 8. \\
+        \end{cases}
+    $$
+
+??? note "证明"
+    1.  由 [Legendre 符号的定义](#legendre-符号) 和 [Euler 判别法](#euler-判别法) 易得．
+    2.  注意到
+    
+        $$
+        a_1\equiv a_2\pmod p\implies \left(\frac{a_1}{p}\right)\equiv\left(\frac{a_2}{p}\right)\pmod p,
+        $$
+    
+        而 $\left|\left(\dfrac{a_1}{p}\right)-\left(\dfrac{a_2}{p}\right)\right|\leq 2$ 且 $p>2$，故：
+    
+        $$
+        a_1\equiv a_2\pmod p\implies \left(\frac{a_1}{p}\right)=\left(\frac{a_2}{p}\right).
+        $$
+    3.  由 1 得
+    
+        $$
+        \left(\frac{a_1a_2}{p}\right)\equiv a_1^{\frac{p-1}{2}}a_2^{\frac{p-1}{2}}\equiv\left(\frac{a_1}{p}\right)\left(\frac{a_2}{p}\right)\pmod p.
+        $$
+    
+        而 $\left|\left(\dfrac{a_1a_2}{p}\right)-\left(\dfrac{a_1}{p}\right)\left(\dfrac{a_2}{p}\right)\right|\leq 2$ 且 $p>2$，故
+    
+        $$
+        \left(\frac{a_1a_2}{p}\right)=\left(\frac{a_1}{p}\right)\left(\frac{a_2}{p}\right).
+        $$
+    4.  参见 [二次互反律](#二次互反律)
+
+基于如上性质，若对任意奇素数 $p$ 和 $q$，$\left(\dfrac{p}{q}\right)$ 的值均可计算，则我们就可以对任意合法情况计算 Legendre 符号的值．接下来我们有一个优美的定理，这个定理巧妙地在 $\left(\dfrac{p}{q}\right)$ 和 $\left(\dfrac{q}{p}\right)$ 之间建立起了联系，使得我们能用类似 [辗转相除法](./gcd.md#欧几里得算法) 的思路完成计算．
+
+### 二次互反律
+
+???+ note "二次互反律"
+    设 $p$，$q$ 是两个不同的奇素数，则
+    
+    $$
+    \left(\frac{p}{q}\right)\left(\frac{q}{p}\right)=(-1)^{\frac{p-1}{2}\frac{q-1}{2}}.
+    $$
+
+证明方式很多[^ref5]．一种证明方式是基于如下引理[^ref6]：
+
+???+ note "Gauss 引理"
+    设 $p$ 是奇素数，$(n,p)=1$，对整数 $k~\left(1\leq k\leq (p-1)/2\right)$，令 $r_k=nk\bmod p$，设 $A=\{r_k:r_k < p/2\}$，$B=\{r_k:r_k > p/2\}$，则
+    
+    $$
+    \left(\frac{n}{p}\right)=(-1)^{|B|}.
+    $$
+
+??? note "证明"
+    设 $\lambda=|A|$，$\mu=|B|$，显然 $\lambda+\mu=(p-1)/2$，则
+    
+    $$
+    n^{\frac{p-1}{2}}\left(\frac{p-1}{2}\right)!=\prod_{k=1}^{\frac{p-1}{2}} nk\equiv\prod_{a\in A}a\prod_{b\in B}b\pmod{p}.
+    $$
+    
+    我们知道对 $B$ 中任意元素 $b$，有 $\dfrac{p}{2} < b < p$，所以 $0 < p-b < \dfrac{p}{2}$，进一步，对 $B$ 中任意元素 $b$，我们有 $p-b\notin A$，否则若 $A,B$ 中分别存在元素 $a,b$ 使得 $a=p-b$，则存在整数 $1\leq k_1,k_2\leq (p-1)/2$ 使得 $a\equiv nk_1\pmod p$，$b\equiv nk_2\pmod p$ 且 $p\mid n(k_1+k_2)$，由于 $(n,p)=1$，则 $p\mid (k_1+k_2)$，注意到 $0 < k_1+k_2 < p$，所以产生矛盾．因此
+    
+    $$
+    n^{\frac{p-1}{2}}\left(\frac{p-1}{2}\right)!\equiv(-1)^{\mu}\prod_{a\in A}a\prod_{b\in B}(p-b)=(-1)^{\mu}\left(\frac{p-1}{2}\right)!\pmod{p},
+    $$
+    
+    即
+    
+    $$
+    n^{\frac{p-1}{2}}\equiv(-1)^{\mu}\pmod{p}.
+    $$
+    
+    从而由 Legendre 符号的 [性质 1](#性质) 即得证．
+
+??? tip "推广"
+    Gauss 引理可做如下推广[^ref7]：
+    
+    设 $p$ 是奇素数，令 $I\subset\mathbf{Z}_p^*$ 满足 $I\cup -I=\mathbf{Z}_p^*$ 且 $I\cap -I=\varnothing$，其中 $-I:=\{-i:i\in I\}$，则对任意与 $p$ 互质的整数 $n$，
+    
+    $$
+    \left(\frac{n}{p}\right)=(-1)^{|J|},
+    $$
+    
+    其中 $J=\{j\in I:nj\in -I\}$.
+    
+    不难发现取 $I=\{1,2,\dots,(p-1)/2\}$ 即可得到 Gauss 引理．证明方法和 Gauss 引理的证明基本相同，故省略．
+
+容易得到如下推论：
+
+???+ note "推论"
+    对奇素数 $p$，有
+    
+    $$
+    \left(\frac{2}{p}\right)=(-1)^{\frac{p^2-1}{8}}=\begin{cases}
+            1,  & p\equiv \pm 1\pmod 8, \\
+            -1, & p\equiv \pm 3\pmod 8. \\
+        \end{cases}
+    $$
+    
+    对奇素数 $p$，奇数 $n$ 满足 $(n,p)=1$，有
+    
+    $$
+    \left(\frac{n}{p}\right)=(-1)^{\sum_{i=1}^{(p-1)/2}\lfloor ni/p \rfloor}.
+    $$
+
+??? note "证明"
+    对 Gauss 引理中的 $n,k,r_k,A,B,\lambda,\mu$，有 $nk=p\left\lfloor\dfrac{nk}{p}\right\rfloor+r_k$，进而
+    
+    $$
+    \begin{aligned}
+        n\cdot\frac{p^2-1}{8}=\sum_{k=1}^{\frac{p-1}{2}}nk&=p\sum_{k=1}^{\frac{p-1}{2}}\left\lfloor\dfrac{nk}{p}\right\rfloor+\sum_{a\in A}a+\sum_{b\in B}b\\
+        &=p\sum_{k=1}^{\frac{p-1}{2}}\left\lfloor\dfrac{nk}{p}\right\rfloor+\sum_{a\in A}a+\sum_{b\in B}(p-b)+2\sum_{b\in B}b-p\mu\\
+        &=p\sum_{k=1}^{\frac{p-1}{2}}\left\lfloor\dfrac{nk}{p}\right\rfloor+\sum_{k=1}^{\frac{p-1}{2}}k+2\sum_{b\in B}b-p\mu\\
+        &=p\sum_{k=1}^{\frac{p-1}{2}}\left\lfloor\dfrac{nk}{p}\right\rfloor+\frac{p^2-1}{8}+2\sum_{b\in B}b-p\mu,
+    \end{aligned}
+    $$
+    
+    因此
+    
+    $$
+    (n-1)\frac{p^2-1}{8}=p\sum_{k=1}^{\frac{p-1}{2}}\left\lfloor\dfrac{nk}{p}\right\rfloor+2\sum_{b\in B}b-p\mu.
+    $$
+    
+    若 $n=2$，则 $0 < \dfrac{nk}{p}\leq\dfrac{p-1}{p} < 1$，从而有
+    
+    $$
+    \frac{p^2-1}{8}\equiv\mu\pmod{2}.
+    $$
+    
+    若 $2\nmid n$，则有
+    
+    $$
+    \sum_{k=1}^{\frac{p-1}{2}}\left\lfloor\dfrac{nk}{p}\right\rfloor\equiv\mu\pmod{2}.
+    $$
+
+根据如上推论，证明二次互反律只需验证
 
 $$
-x^2 \equiv a \pmod p
+\frac{p-1}{2}\frac{q-1}{2}=\sum_{k=1}^{\frac{p-1}{2}}\left\lfloor\dfrac{qk}{p}\right\rfloor+\sum_{k=1}^{\frac{q-1}{2}}\left\lfloor\dfrac{pk}{q}\right\rfloor.
 $$
 
-通俗一些，可以认为是求模意义下的开方。这里只讨论 $\boldsymbol{p}$ **为奇素数** 的求解方法，将会使用 Cipolla 算法。
+考虑由点 $(px,qy)$，$1\leq x\leq \dfrac{q-1}{2},1\leq y\leq \dfrac{p-1}{2}$ 构成的集合 $S$，将其根据 $px$ 与 $qy$ 的大小关系分成两部分（显然 $px\neq qy$），分别验证三个集合的大小即可．
 
-## 解的数量
+二次互反律不仅能用于判断数 $n$ 是否是模 $p$ 的二次剩余，还能用于确定使数 $n$ 为二次剩余的模数的结构．
 
-对于 $x^2 \equiv n \pmod p$，能满足＂$n$ 是模 $p$ 的二次剩余＂的 $n$ 一共有 $\frac{p-1}{2}$ 个（0 不包括在内），非二次剩余有 $\frac{p-1}{2}$ 个。
+???+ example "Example"
+    -   使得 $5$ 为二次剩余的奇素数 $p$ 满足 $p\equiv \pm 1\pmod 5.$
+    -   使得 $-3$ 为二次剩余的奇素数 $p$ 满足 $p\equiv 1\pmod 3.$
+    -   使得 $-2$，$3$ 同时为二次剩余的奇素数 $p$ 满足 $p\equiv 1\pmod{24}$ 或 $p\equiv 11\pmod{24}.$
 
-### 证明
+另外，我们还可以证明诸如「形如 $4k+1$ 的素数有无限多个」之类的结论，这一类结论实际上是 [Dirichlet 定理](https://en.wikipedia.org/wiki/Dirichlet%27s_theorem_on_arithmetic_progressions) 的简单推论．
 
-$x=0$ 对应了 $n=0$ 的特殊情况，因此我们只用考虑 $x \in [1,\frac{p-1}{2}]$ 的情况。
+## Jacobi 符号
 
-一个显然的性质是 $(p-x)^2 \equiv x^2 \pmod p$，那么当 $x \in [1,\frac{p-1}{2}]$ 我们可以取到所有解。
+根据二次互反律，我们可以很自然地想到一种推广 Legendre 符号的方法：
 
-接下来我们只需要证明当 $x\in[1,\frac{p-1}{2}]$ 时 $x^2 \bmod p$ 两两不同。
+???+ abstract "Jacobi 符号"
+    对 **正奇数**  $m=p_1^{\alpha_1}\dots p_k^{\alpha_k}$ 和整数 $a$，其中 $p_1,\dots,p_k$ 是素数，$\alpha_1,\dots,\alpha_k$ 是正整数，定义 Jacobi 符号如下：
+    
+    $$
+    \left(\frac{a}{m}\right):=\prod_{i=1}^k\left(\frac{a}{p_i}\right)^{\alpha_i}.
+    $$
+    
+    其中等式右端的 $\left(\frac{a}{p_i}\right)$ 为 [Legendre 符号](#legendre-符号)．另外对整数 $a$ 有 $\left(\dfrac{a}{1}\right)=1.$
 
-运用反证法，假设存在不同的两个整数 $x,y \in [1,\frac{p-1}{2}]$ 且 $x^2 \equiv y^2 \pmod p$，
+???+ warning "Warning"
+    我们一般不区分 Legendre 符号和 Jacobi 符号，因为由完全积性可知 Jacobi 符号具有和 Legendre 符号一样的性质，所以这两种符号的计算方法是一致的．但是有一点需要注意：当 $m$  **不是奇素数** 时，$\left(\dfrac{a}{m}\right)$ 的值与 $a$ 是否是模 $m$ 的二次剩余 **无关**，但是若 $\left(\dfrac{a}{m}\right)=-1$，则说明 $m$ 至少存在一个（实际上是奇数个）素因子 $p$ 使得 $a$ 是模 $p$ 的二次非剩余，从而此时 $a$ 是模 $m$ 的二次非剩余．
 
-则有 $(x+y)(x-y) \equiv 0 \pmod p$
+我们还可以把模数进一步推广为 **整数**（只需补充 $\left(\dfrac{a}{-1}\right)$、$\left(\dfrac{a}{0}\right)$ 和 $\left(\dfrac{a}{2}\right)$ 的定义），这样就得到了 [Kronecker 符号](https://en.wikipedia.org/wiki/Kronecker_symbol)．
 
-显然 $-p<x+y<p,-p<x-y<p,x+y \neq 0,x-y \neq 0$，故假设不成立，原命题成立。
+## 模意义下开平方
 
-## 勒让德符号
+本节讨论模意义下开平方的算法．特别地，本节主要介绍素数模的情形．对于一般模数的情形，可以参考 [模意义下开高次方](./residue.md#模意义下开方) 的讨论．
+
+### 特殊情况时的算法
+
+对于同余方程 $x^2\equiv a\pmod p$，其中 $p$ 为奇素数且 $a$ 为二次剩余在 $p\bmod 4=3$ 时有更简单的解法，考虑
 
 $$
-\left(\frac{n}{p}\right)=\begin{cases}
-1,\,&p\nmid n \text{且}n\text{是}p\text{的二次剩余}\\
--1,\,&p\nmid n \text{且}n\text{不是}p\text{的二次剩余}\\
-0,\,&p\mid n
+\begin{aligned}
+\left(a^{(p+1)/4}\right)^2&\equiv a^{(p+1)/2}&\pmod p\\
+&\equiv x^{p+1}&\pmod p\\
+&\equiv \left(x^2\right)\left(x^{p-1}\right)&\pmod p\\
+&\equiv x^2&\pmod p&\quad (\because{\text{Fermat's little theorem}})
+\end{aligned}
+$$
+
+那么 $a^{(p+1)/4}\bmod p$ 为一个解．
+
+#### Atkin 算法
+
+仍然考虑上述同余方程，此时 $p\bmod 8=5$，那么令 $b\equiv (2a)^{(p-5)/8}\pmod p$ 和 $\mathrm{i}\equiv 2ab^2\pmod p$ 那么此时 $\mathrm{i}^2\equiv -1\pmod p$ 且 $ab(\mathrm{i}-1)\bmod p$ 为一个解．
+
+???+ note "证明"
+    $$
+    \begin{aligned}
+    \mathrm{i}^2&\equiv\left(2ab^2\right)^2&\pmod p\\
+    &\equiv \left(2a\cdot \left(2a\right)^{(p-5)/4}\right)^2&\pmod p\\
+    &\equiv \left(\left(2a\right)^{(p-1)/4}\right)^2&\pmod p\\
+    &\equiv \left(2a\right)^{\frac{p-1}{2}}&\pmod p\\
+    &\equiv -1&\pmod p
+    \end{aligned}
+    $$
+    
+    那么
+    
+    $$
+    \begin{aligned}
+    \left(ab(\mathrm{i}-1)\right)^2&\equiv a^2\cdot \left(2a\right)^{(p-5)/4}\cdot (-2\mathrm{i})&\pmod p\\
+    &\equiv a\cdot (-\mathrm{i})\cdot \left(2a\right)^{(p-1)/4}&\pmod p\\
+    &\equiv a&\pmod p
+    \end{aligned}
+    $$
+
+### Cipolla 算法
+
+Cipolla 算法用于求解同余方程 $y^2\equiv a\pmod p$，其中 $p$ 为奇素数且 $a$ 为二次剩余．
+
+本节考虑 $\mathbf{F}_p\lbrack x\rbrack /(x^2-g)$ 中的运算，其中 $g \in \mathbf{F}_p$．
+
+??? note "计算方法"
+    不熟悉 [多项式环](../algebra/ring-theory.md#多项式环) 的读者，可以简单理解为该集合的元素都具有形式 $a_0+a_1x$ 且 $a_0,a_1\in\mathbf F_p$，且遵循如下运算法则：
+    
+    $$
+    \begin{aligned}
+    (a_0+a_1x)+(b_0+b_1x) &\equiv (a_0+b_0)+(a_1+b_1)x &\pmod{(x^2-g)}\\
+    (a_0+a_1x)(b_0+b_1x) &\equiv (a_0b_0+a_1b_1g)+(a_1b_0+a_0b_1)x &\pmod{(x^2-g)}
+    \end{aligned}
+    $$
+    
+    需要注意的是，此处的 $x$ 并不是一个具体的数，而是表示多项式中的形式记号．运算中一个关键的点在于利用 $x^2 \equiv g \pmod{(x^2-g)}$ 将二次项转化为一次项和常数项．另外，所有整数运算都需要对 $p$ 取模．
+    
+    关于该结构的更多内容，请参见 [多项式](../poly/intro.md) 和 [域论](../algebra/field-theory.md) 等页面．
+
+该算法的第一步为找到一个 $r$ 使得 $r^2-a$ 为二次非剩余．当然对于 $a \equiv 0 \pmod p$ 不可能找到这样的 $r$，需要进行特判．下文只讨论 $a \not\equiv 0 \pmod p$ 的情况．此时可随机一个 $r$ 然后判断，期望可以 $2$ 步找到．于是，$(r-x)^{\frac{p+1}{2}}\bmod (x^2-(r^2-a))$ 为一个解，可以通过快速幂求值．
+
+??? note "为什么期望只需要两步"
+    考虑 $r^2-a$ 为二次剩余的情况，则存在一个 $x$ 使得 $r^2-a \equiv x^2 \pmod p$，移项可得 $(r+x)(r-x) \equiv a \pmod p$，不难发现每一个 $(r+x) \in [1, p-1]$，都一一对应于一组 $(r,x)$ 的解，所以使原方程成立的解一共有 $p-1$ 组．我们分类讨论 $x \equiv 0$ 和 $x \not\equiv 0$ 两种情况．对于 $x \equiv 0$，由于 $a$ 是二次剩余，对应了 $2$ 种 $r$ 的取值；对于 $x \not\equiv 0$，有 $p-1-2$ 种情况，每一个 $r$ 对应其中两种，一共有 $\dfrac{p-3}{2}$ 种 $r$ 的取值．综上，一共有 $2+\dfrac{p-3}{2}=\dfrac{p+1}{2}$ 种情况使得 $r^2-a$ 为二次剩余，所以每随机一次得到二次非剩余的概率就是 $\dfrac{p-1}{2p}$，期望步数为 $\dfrac{2p}{p-1} \approx 2$．
+
+???+ note "证明"
+    为了方便，首先令 $f(x)=x^2-(r^2-a)\in\mathbf{F}_p\lbrack x\rbrack$．
+    
+    需要证明的是，$(r-x)^{\frac{p+1}{2}} \bmod f(x)$ 是原式的解，并且它属于 $\mathbf{F}_p$．首先考虑证明前者，即证明 $(r-x)^{p+1}\equiv a\pmod {f(x)}$．为此，我们需要先证明两个引理：
+    
+    **引理 1：** $x^p \equiv -x \pmod {f(x)}$
+    
+    证明：
+    
+    $$
+    \begin{aligned}
+    x^p&= x(x^2)^{\frac{p-1}{2}}\\
+    &\equiv x(r^2-a)^{\frac{p-1}{2}}&\pmod{f(x)}&\quad (\because{x^2\equiv r^2-a\pmod{f(x)}})\\
+    &\equiv -x&\pmod{f(x)}&\quad (\because{r^2-a}\text{ is quadratic non-residue})
+    \end{aligned}
+    $$
+    
+    **引理 2：**$(a+b)^p \equiv a^p+b^p \pmod p$
+    
+    使用二项式定理容易发现，除了第一项和最后一项，分子上的 $p$ 无法消掉，于是只剩下 $a^p+b^p$．
+    
+    $$
+    \begin{aligned}
+    (a+b)^p&=\sum_{i=0}^p\binom{p}{i}a^ib^{p-i}\\
+    &=\sum_{i=0}^p\frac{p!}{i!(p-i)!}a^ib^{p-i}\\
+    &\equiv a^p+b^p\pmod p
+    \end{aligned}
+    $$
+    
+    有了这两个引理，我们再来考虑证明原式：
+    
+    $$
+    \begin{aligned}
+    (r-x)^{p+1}
+    &= (r-x)^p(r-x)\\
+    &\equiv (r^p-x^p)(r-x)&\pmod{f(x)}\\
+    &\equiv (r+x)(r-x)&\pmod{f(x)}\\
+    &= r^2-x^2\\
+    &\equiv r^2-(r^2-a)&\pmod{f(x)}\\
+    &= a\\
+    \end{aligned}
+    $$
+    
+    下面通过反证法证明我们求出的解属于 $\mathbf{F}_p$，即其 $x$ 的系数为 $0$．
+    
+    假设存在一个 $(a_0+a_1x)^2 \equiv a \pmod {f(x)}$ 满足 $a_1 \not\equiv 0 \pmod p$，即 $a_0^2+2a_0a_1x+a_1^2x^2 \equiv a \pmod {f(x)}$，移项并化简可得：
+    
+    $$
+    a_0^2+a_1^2(r^2-a)-a \equiv -2a_0a_1x \pmod {f(x)}
+    $$
+    
+    式子左边的 $x$ 的系数为 $0$，所以右边 $x$ 的系数也为 $0$，即 $a_0a_1 \equiv 0 \pmod p$，由于我们令 $a_1 \not\equiv 0 \pmod p$，所以一定有 $a_0 \equiv 0 \pmod p$，于是 $(a_1x)^2 \equiv a \pmod {f(x)}$ 即 $r^2-a \equiv aa_1^{-2} \pmod p$．
+    
+    由于 $a$ 和 $a_1^{-2}$ 都是二次剩余，由 Legendre 符号的积性可知 $aa_1^{-2}$ 也是二次剩余，这与 $r^2-a$ 是二次非剩余矛盾．于是原式不存在一个解使得 $x$ 的系数非 $0$，我们求出的解的 $x$ 的系数也必定为 $0$．
+
+??? example "模板题 [洛谷 P5491【模板】二次剩余](https://www.luogu.com.cn/problem/P5491)"
+    ```cpp
+    --8<-- "docs/math/code/quad-residue/quad-residue_1.cpp"
+    ```
+
+### Bostan–Mori 算法
+
+该算法基于 Cipolla 算法，我们将问题转换为 [常系数齐次线性递推](../poly/linear-recurrence.md) 再应用 Bostan–Mori 算法．考虑另一种常见的 Cipolla 算法的描述：$b=x^{\left(p+1\right)/2}\bmod{\left(x^2-tx+a\right)}$ 为满足 $b^2\equiv a\pmod{p}$ 的一个解[^ref3]，其中 $x^2-tx+a\in \mathbf{F}_p\lbrack x\rbrack$ 为不可约多项式．系数 $t$ 的选取同样使用随机方法．证明过程略．参考 Bostan 和 Mori 论文[^ref4]中的算法我们可以发现问题可转化为求解形式幂级数的乘法逆元的某一项系数：
+
+$$
+b=\left\lbrack x^{(p+1)/2}\right\rbrack\dfrac{1}{1-tx+ax^2}
+$$
+
+且
+
+$$
+\left\lbrack x^n\right\rbrack\dfrac{k_0+k_1x}{1+k_2x+k_3x^2}=
+\begin{cases}
+\left\lbrack x^{(n-1)/2}\right\rbrack\dfrac{k_1-k_0k_2+k_1k_3x}{1+(2k_3-k_2^2)x+k_3^2x^2},&\text{if }n\bmod 2=1\\
+\left\lbrack x^{n/2}\right\rbrack\dfrac{k_0+(k_0k_3-k_1k_2)x}{1+(2k_3-k_2^2)x+k_3^2x^2},&\text{else if }n\neq 0
 \end{cases}
 $$
 
-通过勒让德符号可以判断一个数 $n$ 是否为二次剩余，具体判断 $n$ 是否为 $p$ 的二次剩余，需要通过欧拉判别准则来实现。
+而 $n=0$ 时显然有 $\left\lbrack x^0\right\rbrack\dfrac{k_0+k_1x}{1+k_2x+k_3x^2}=k_0$，该算法乘法次数相较于 Cipolla 算法更少．其他相关乘法次数较少的算法可见 Müller 的文章[^ref2]．
 
-下表为部分勒让德符号的值![](./images/quad_residue.png)
+### Legendre 算法
 
-## 欧拉判别准则
+对于同余方程 $x^2\equiv a\pmod p$，其中 $p$ 为奇素数且 $a$ 为二次剩余．Legendre 算法可描述为找到 $r$ 满足 $r^2-a$ 为二次非剩余，令 $a_0+a_1x=(r-x)^{\frac{p-1}{2}}\bmod (x^2-a)$，那么 $a_0\equiv 0\pmod p$ 且 $a_1^{-2}\equiv a\pmod p$.
 
-$$
-\left(\frac{n}{p}\right)\equiv n^{\frac{p-1}{2}}\pmod p
-$$
-
-若 $n$ 是二次剩余，当且仅当 $n^{\frac{p-1}{2}}\equiv 1\pmod p$。
-
-若 $n$ 是非二次剩余，当且仅当 $n^{\frac{p-1}{2}}\equiv -1\pmod p$。
-
-### 证明
-
-由于 $p$ 为奇素数，那么 $p-1$ 是一个偶数，根据 [费马小定理](./fermat.md)  $n^{p - 1} \equiv 1 \pmod{p}$，那么就有
-
-$$
-(n^{\frac{p-1}{2}}-1)\cdot(n^{\frac{p-1}{2}}+1)\equiv 0 \pmod p
-$$
-
-其中 $p$ 是一个素数，所以 $n^{\frac{p-1}{2}}-1$ 和 $n^{\frac{p-1}{2}}+1$ 中必有一个是 $p$ 的倍数，
-
-因此 $n^{\frac{p-1}{2}}$ 模 $p$ 的余数必然是 1 或者 - 1。
-
-$p$ 是一个奇素数，所以关于 $p$ 的 [原根](./primitive-root.md) 存在。
-
-设 $a$ 是 $p$ 的一个 [原根](./primitive-root.md)，则存在 $1 \leqslant j \leqslant p-1$ 使得 $n=a^j$。于是就有
-
-$$
-a^{j\frac{p-1}{2}}\equiv1\pmod p
-$$
-
-$a$ 是 $p$ 的一个 [原根](./primitive-root.md)，因此 $a$ 模 $p$ 的指数是 $p-1$，于是 $p-1$ 整除 $\frac{j(p-1)}{2}$。这说明 $j$ 是一个偶数。
-
-令 $i=\frac{j}{2}$，就有 $(a^i)^2=a^{2i}=n$。$n$ 是模 $p$ 的二次剩余。
-
-## Cipolla 算法
-
-找到一个数 $a$ 满足 $a^2-n$ 是 **非二次剩余**，至于为什么要找满足非二次剩余的数，在下文会给出解释。
-这里通过生成随机数再检验的方法来实现，由于非二次剩余的数量为 $\frac{p-1}{2}$，接近 $\frac{p}{2}$，所以期望约 2 次就可以找到这个数。
-
-建立一个＂复数域＂，并不是实际意义上的复数域，而是根据复数域的概念建立的一个类似的域。
-在复数中 $i^2=-1$，这里定义 $i^2=a^2-n$，于是就可以将所有的数表达为 $A+Bi$ 的形式，这里的 $A$ 和 $B$ 都是模意义下的数，类似复数中的实部和虚部。
-
-在有了 $i$ 和 $a$ 后可以直接得到答案，$x^2\equiv n\pmod p$ 的解为 $(a+i)^{\frac{p+1}{2}}$。
-
-### 证明
-
-- 定理 1：$(a+b)^p\equiv a^p+b^p\pmod p$
-
-$$
-\begin{aligned}
-(a+b)^p &\equiv \sum_{i=0}^{p}\mathrm C_p^i a^{p-i}b^i \\
-&\equiv \sum_{i=0}^{p}\frac{p!}{(p-i)!i!}a^{p-i}b^i \\
-&\equiv a^p+b^p\pmod p
-\end{aligned}
-$$
-
-可以发现只有当 $i=0$ 和 $i=p$ 时由于没有因子 $p$ 不会因为模 $p$ 被消去，其他的项都因为有 $p$ 因子被消去了。
-
-- 定理 2：$i^p\equiv -i\pmod p$
-
-$$
-\begin{aligned}
-i^p &\equiv i^{p-1} \cdot i \\
-&\equiv (i^2)^{\frac{p-1}{2}}\cdot i \\
-&\equiv (a^2-n)^{\frac{p-1}{2}}\cdot i \\
-&\equiv -i \pmod p
-\end{aligned}
-$$
-
-- 定理 3：$a^p\equiv a \pmod p$ 这是 [费马小定理](./fermat.md) 的另一种表达形式
-
-有了这三条定理之后可以开始推导
-
-$$
-\begin{aligned}
-x &\equiv (a+i)^{\frac{p+1}{2}} \\
-&\equiv ((a+i)^{p+1})^{\frac{1}{2}} \\
-&\equiv ((a+i)^p\cdot (a+i))^{\frac{1}{2}} \\
-&\equiv ((a^p+i^p)\cdot(a+i))^{\frac{1}{2}} \\
-&\equiv ((a-i)\cdot(a+i))^{\frac{1}{2}} \\
-&\equiv (a^2-i^2)^{\frac{1}{2}} \\
-&\equiv (a^2-(a^2-n))^{\frac{1}{2}} \\
-&\equiv n^{\frac{1}{2}}\pmod p
-\end{aligned}
-$$
-
-$\therefore x\equiv (a+i)^{\frac{p+1}{2}} \equiv n^{\frac{1}{2}}\pmod p$
-
-??? note "参考实现"
-    ```c++
-    #include <bits/stdc++.h>
-    using namespace std;
+???+ note "证明"
+    考虑选择一个 $b$ 满足 $b^2\equiv a\pmod p$，那么 $(r-b)(r+b)=r^2-a$ 为二次非剩余，所以
     
-    typedef long long ll;
-    int t;
-    ll n, p;
-    ll w;
+    $$
+    (r-b)^{\frac{p-1}{2}}(r+b)^{\frac{p-1}{2}}\equiv -1\pmod p
+    $$
     
-    struct num {  //建立一个复数域
-      ll x, y;
-    };
+    存在环态射
     
-    num mul(num a, num b, ll p) {  //复数乘法
-      num ans = {0, 0};
-      ans.x = ((a.x * b.x % p + a.y * b.y % p * w % p) % p + p) % p;
-      ans.y = ((a.x * b.y % p + a.y * b.x % p) % p + p) % p;
-      return ans;
-    }
+    $$
+    \begin{aligned}
+    \phi:\mathbf{F}_p\lbrack x\rbrack/(x^2-a)&\to \mathbf{F}_p\times \mathbf{F}_p\\
+    x&\mapsto (b,-b)
+    \end{aligned}
+    $$
     
-    ll binpow_real(ll a, ll b, ll p) {  //实部快速幂
-      ll ans = 1;
-      while (b) {
-        if (b & 1) ans = ans * a % p;
-        a = a * a % p;
-        b >>= 1;
-      }
-      return ans % p;
-    }
+    那么
     
-    ll binpow_imag(num a, ll b, ll p) {  //虚部快速幂
-      num ans = {1, 0};
-      while (b) {
-        if (b & 1) ans = mul(ans, a, p);
-        a = mul(a, a, p);
-        b >>= 1;
-      }
-      return ans.x % p;
-    }
+    $$
+    \begin{aligned}
+    (a_0+a_1b,a_0-a_1b)&=\phi(a_0+a_1x)\\
+    &=\phi(r-x)^{\frac{p-1}{2}}\\
+    &=((r-b)^{\frac{p-1}{2}},(r+b)^{\frac{p-1}{2}})\\
+    &=(\pm 1,\mp 1)
+    \end{aligned}
+    $$
     
-    ll cipolla(ll n, ll p) {
-      n %= p;
-      if (p == 2) return n;
-      if (binpow_real(n, (p - 1) / 2, p) == p - 1) return -1;
-      ll a;
-      while (1) {  //生成随机数再检验找到满足非二次剩余的a
-        a = rand() % p;
-        w = ((a * a % p - n) % p + p) % p;
-        if (binpow_real(w, (p - 1) / 2, p) == p - 1) break;
-      }
-      num x = {a, 1};
-      return binpow_imag(x, (p + 1) / 2, p);
-    }
-    ```
+    所以 $2a_0=(\pm 1)+(\mp 1)=0$ 而 $2a_1b=(\pm 1)-(\mp 1)=\pm 2$.
 
-## Tonelli-Shanks 算法
+### Tonelli–Shanks 算法
 
-大致思路如下：
+Tonelli–Shanks 算法是基于离散对数求解同余方程 $x^2\equiv a\pmod p$ 的算法[^ref1]，其中 $p$ 为奇素数且 $a$ 为模 $p$ 的二次剩余．
 
-先令 $p-1 = 2^s \times t$, 则 $t$ 为奇数。
+令 $p-1=m2^n$，其中 $m$ 为奇数．仍然使用随机方法寻找 $r\in\mathbf{F}_p$ 满足 $r$ 为二次非剩余．令 $g\equiv r^m\pmod p$ 且 $b\equiv a^{(m-1)/2}\pmod p$，那么存在整数 $e\in\lbrace 0,1,2,\dots ,2^n-1\rbrace$ 满足 $ab^2\equiv g^e\pmod p$．若 $a$ 为二次剩余，那么 $e$ 为偶数且 $\left(abg^{-e/2}\right)^2\equiv a\pmod p$.
 
-针对 $s$ 的值分两种情况 $s = 1$ 和 $s > 1$ 进行讨论。
-
-如果 $s = 1$：
-
-1. 因为 $a$ 是 $p$ 的二次剩余，所以 $a^{\frac{p-1}{2}} \equiv 1 \pmod p$，即 $\sqrt{a^{\frac{p-1}{2}}} \equiv 1 \pmod p$；
-2. 由 1 可知，$x \equiv \sqrt{a^{\frac{p-1}{2}} \times a} \pmod p$；
-3. 注意到 $s = 1$，可以得出 $x \equiv \sqrt{a^{t} \times a} \pmod p$，进一步得到 $x \equiv a^{\frac{t+1}{2}} \pmod p$。
-
-因此 $s = 1$ 时，$x$ 的值容易求出。
-
-对于 $s > 1$ 的情况，设 $x_{s-1} \equiv a^{\frac{t+1}{2}} \pmod p$。
-
-1. 由欧拉判别准则可知 $a^{\frac{p-1}{2}} \equiv 1 \pmod p$，进一步有 $a^{2^{(s-1)} \times t} \equiv 1 \pmod p$；
-2. 稍作变形得到 $\left(a^{-1} \times \left(a^{\frac{t+1}{2}}\right)^{2}\right)^{2^{s-1}} \equiv 1 \pmod p)$，即 $\left(a^{-1} \times x_{s-1}^{2}\right)^{2^{s-1}} \equiv 1 \pmod p$。
-
-所以 $a^{-1} \times x_{s-1}^{2}$ 是模 $p$ 意义下的 1 的 $2^{s-1}$ 次根。
-
-接下来设 $e_k$ 为模 $p$ 意义下的 $2^k$ 次单位根。容易发现 $e_{s-1} = a^{-1} \times x^{2}_{s-1}$。
-
-假设我们已经知道 $e_{s-k}, x_{s-k}$：因为 $e_{s-k}^{2^{s-k}} \equiv 1 \pmod p$，所以有 $\sqrt{(e_{s-k}^{2^{s-k}})} \equiv \pm 1 \pmod p$，即 $e_{s-k}^{2^{s-k-1}} \equiv \pm 1 \pmod p$；
-
-现在的任务变成了计算 $e_{s-k}^{2^{s-k-1}} \pmod p$。这时候又可以分为两种情况：$e_{s-k}^{2^{s-k-1}} \equiv 1 \pmod p$ 和 $e_{s-k}^{2^{s-k-1}} \equiv -1 \pmod p$。
-
-对于第一种情况，容易得到：$e_{s-k-1} \equiv e_{s-k}  \pmod p$，$x_{s-k-1} \equiv x_{s-k}  \pmod p$。
-
-对于第二种情况，则有：$\left(a^{-1} \times x_{s-k}^{2}\right)^{2^{s-k-1}} \equiv -1 \pmod p$。我们此时需要找到一个 $q$，使得 $\left(a^{-1} \times (qx_{s-k})^{2}\right)^{2^{s-k-1}} \equiv 1 \pmod p$。
-
-寻找 $q$ 的思路如下：因为 $\left(a^{-1} \times (qx_{s-k})^{2}\right)^{2^{s-k-1}} \equiv 1 \pmod p$，所以 $q^{2^{s-k}} \equiv -1 \pmod p$。
-
-接下来寻找一个非二次剩余 $b$：
-
-- 因为 $b$ 是非二次剩余，所以 $b^{\frac{p-1}{2}} \equiv -1 \pmod p$，即 $b^{t2^{s-1}} \equiv -1 \pmod p$；
-- 稍微变个形得到 $b^{t \times 2^{s-k} \times 2^{k-1}} \equiv -1 \pmod p$，即 $(b^{t \times 2^{k-1}})^{2^{s-k}} \equiv -1 \pmod p$；
-- $q \equiv b^{t \times 2^{k-1}} \pmod p$。
-
-最后得到 $x_{s-k-1} \equiv x_{s-k} \times q \pmod p$。
-
-不断迭代即可得到答案。该做法的时间复杂度约为 $O(\log p)$。
-
-??? note "参考实现"
-    ```python3
-    import random
-    # example a, p
-    a = 8479994658316772151941616510097127087554541274812435112009425778595495359700244470400642403747058566807127814165396640215844192327900454116257979487432016769329970767046735091249898678088061634796559556704959846424131820416048436501387617211770124292793308079214153179977624440438616958575058361193975686620046439877308339989295604537867493683872778843921771307305602776398786978353866231661453376056771972069776398999013769588936194859344941268223184197231368887060609212875507518936172060702209557124430477137421847130682601666968691651447236917018634902407704797328509461854842432015009878011354022108661461024768
-    p = 30531851861994333252675935111487950694414332763909083514133769861350960895076504687261369815735742549428789138300843082086550059082835141454526618160634109969195486322015775943030060449557090064811940139431735209185996454739163555910726493597222646855506445602953689527405362207926990442391705014604777038685880527537489845359101552442292804398472642356609304810680731556542002301547846635101455995732584071355903010856718680732337369128498655255277003643669031694516851390505923416710601212618443109844041514942401969629158975457079026906304328749039997262960301209158175920051890620947063936347307238412281568760161
+???+ note "证明"
+    根据费马小定理可知
     
-    b = random.randint(1, p)
-    while (pow(b, (p-1)//2, p) == 1):
-        b = random.randint(1, p)
+    $$
+    g^{2^n} \equiv r^{m2^n} = r^{p-1} \equiv 1 \pmod p.
+    $$
     
-    t = p - 1
-    s = 0
-    while (t % 2 == 0):
-        s += 1
-        t = t // 2
-    x = pow(a, (t + 1) // 2, p)
-    e = pow(a, t, p)
-    k = 1
-    while (k < s):
-        if (pow(e, 1 << (s - k - 1), p) != 1):
-            x = x * pow(b, (1 << (k - 1)) * t, p) % p
-        e = pow(a, p-2, p) * x % p * x % p
-        k += 1
-    print(x)
-    ```
+    又由于 $r$ 是二次非剩余，有
+    
+    $$
+    g^{2^{n-1}} \equiv r^{m2^{n-1}} = r^{\frac{p-1}{2}} \equiv -1 \pmod p.  
+    $$
+    
+    所以，$g$ 模 $p$ 的阶是 $2^n$．又因为 $ab^2\equiv a^m\pmod p$ 是 $x^{2^n}\equiv 1\pmod p$ 的解，所以 $a^m$ 是 $g$ 的幂次．记 $a^m\equiv g^e\pmod p$．
+    
+    因为 $a$ 是二次剩余，所以
+    
+    $$
+    g^{e2^{n-1}} \equiv a^{m2^{n-1}} = a^{\frac{p-1}{2}} \equiv 1 \pmod p.
+    $$
+    
+    由阶的性质可知，$2^n\mid e2^{n-1}$，所以，$e$ 是偶数．因此，$abg^{-e/2}\bmod p$ 是良定义的，且
+    
+    $$
+    \left(abg^{-e/2}\right)^2 = a^2b^2g^{-e} \equiv a^{m+1}g^{-e} \equiv a \pmod p.
+    $$
+
+剩下的问题是如何计算 $e$．Tonelli 和 Shanks 提出一次确定 $e$ 的一个二进制位．令 $e$ 在二进制下表示为 $e=e_0+2e_1+4e_2+\cdots$，其中 $e_k\in\lbrace 0,1\rbrace$．因为 $a$ 是二次剩余，所以开始时 $e_0=0$，然后利用如下性质逐位确定 $e_k$ 的取值：
+
+$$
+\left(g^eg^{-(e\bmod 2^k)}\right)^{2^{n-1-k}}\equiv g^{2^{n-1}\cdot e_k}\equiv 
+\begin{cases}
+1\pmod p,&\text{if }e_k=0\\
+-1\pmod p,&\text{if }e_k=1
+\end{cases}
+$$
+
+其中，$g^e\equiv ab^2\pmod p$ 已知，而 $e\bmod 2^k$ 的取值可以由之前的数位 $e_0,e_1,\cdots,e_{k-1}$ 计算得到．当然，实现算法时，只需要直接维护乘积 $g^eg^{-(e\bmod 2^k)}\bmod p$ 即可．
 
 ## 习题
 
-[【模板】二次剩余](https://www.luogu.com.cn/problem/P5491)
+-   [洛谷 P5491【模板】二次剩余](https://www.luogu.com.cn/problem/P5491)
+-   [「Timus 1132」Square Root](https://acm.timus.ru/problem.aspx?space=1&num=1132)
 
-[「Timus 1132」Square Root](https://acm.timus.ru/problem.aspx?space=1&num=1132)
+## 参考资料与注释
 
-## 参考文献
+1.  [Quadratic residue - Wikipedia](https://en.wikipedia.org/wiki/Quadratic_residue)
+2.  [Euler's criterion - Wikipedia](https://en.wikipedia.org/wiki/Euler%27s_criterion)
 
-<https://en.wikipedia.org/wiki/Quadratic_residue>
+[^ref1]: Daniel. J. Bernstein. Faster Square Roots in Annoying Finite Fields.
 
-<https://en.wikipedia.org/wiki/Euler%27s_criterion>
+[^ref2]: S. Müller, On the computation of square roots in finite fields, Design, Codes and Cryptography, Vol.31, pp. 301-312, 2004.
 
-<https://blog.csdn.net/doyouseeman/article/details/52033204>
+[^ref3]: A. Menezes, P. van Oorschot and S. Vanstone. Handbook of Applied Cryptography, 1996.
 
-[二次剩余 Tonelli-Shanks 算法](https://yutong.site/?p=1192)
+[^ref4]: Alin Bostan, Ryuhei Mori. A Simple and Fast Algorithm for Computing the N-th Term of a Linearly Recurrent Sequence. Available at <https://arxiv.org/abs/2008.08822>.
+
+[^ref5]: [Proofs of quadratic reciprocity - Wikipedia](https://en.wikipedia.org/wiki/Proofs_of_quadratic_reciprocity)
+
+[^ref6]: Carl Friedrich Gauss. Untersuchungen über höhere Arithmetik, 1965. Page 458-462.
+
+[^ref7]: Kobi Kremnizer.[Lectures in number theory 2022](https://courses.maths.ox.ac.uk/pluginfile.php/29788/mod_resource/content/1/numbertheory-2022.pdf). Proposition 4.3.

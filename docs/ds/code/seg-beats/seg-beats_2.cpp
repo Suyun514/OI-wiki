@@ -1,19 +1,7 @@
-#include <cstdio>
 #include <iostream>
 using namespace std;
 
-int inline rd() {
-  register char act = 0;
-  register int f = 1, x = 0;
-  while (act = getchar(), act < '0' && act != '-')
-    ;
-  if (act == '-') f = -1, act = getchar();
-  x = act - '0';
-  while (act = getchar(), act >= '0') x = x * 10 + act - '0';
-  return x * f;
-}
-
-const int N = 5e5 + 5, SZ = N << 2, INF = 0x7fffffff;
+constexpr int N = 5e5 + 5, SZ = N << 2, INF = 0x7fffffff;
 
 int n, m;
 int a[N];
@@ -47,6 +35,7 @@ void pushup(int u) {
     t[u].mn2 = min(t[lu].mn, t[ru].mn2);
   }
 }
+
 void push_add(int u, int l, int r, int v) {
   // 更新加法标记的同时，更新 $\min$ 和 $\max$ 标记
   t[u].sum += (r - l + 1ll) * v;
@@ -57,6 +46,7 @@ void push_add(int u, int l, int r, int v) {
   if (t[u].tmn != INF) t[u].tmn += v;
   t[u].tad += v;
 }
+
 void push_min(int u, int tg) {
   // 注意比较 $\max$ 标记
   if (t[u].mx <= tg) return;
@@ -66,6 +56,7 @@ void push_min(int u, int tg) {
   if (t[u].tmx > tg) t[u].tmx = tg;        // 更新取 $\max$ 标记
   t[u].mx = tg, t[u].tmn = tg;
 }
+
 void push_max(int u, int tg) {
   if (t[u].mn > tg) return;
   t[u].sum += (tg * 1ll - t[u].mn) * t[u].cmn;
@@ -74,6 +65,7 @@ void push_max(int u, int tg) {
   if (t[u].tmn < tg) t[u].tmn = tg;
   t[u].mn = tg, t[u].tmx = tg;
 }
+
 void pushdown(int u, int l, int r) {
   const int lu = u << 1, ru = u << 1 | 1, mid = (l + r) >> 1;
   if (t[u].tad)
@@ -82,6 +74,7 @@ void pushdown(int u, int l, int r) {
   if (t[u].tmn != INF) push_min(lu, t[u].tmn), push_min(ru, t[u].tmn);
   t[u].tad = 0, t[u].tmx = -INF, t[u].tmn = INF;
 }
+
 void build(int u = 1, int l = 1, int r = n) {
   t[u].tmn = INF, t[u].tmx = -INF;  // 取极限
   if (l == r) {
@@ -94,6 +87,7 @@ void build(int u = 1, int l = 1, int r = n) {
   build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
   pushup(u);
 }
+
 void add(int L, int R, int v, int u = 1, int l = 1, int r = n) {
   if (R < l || r < L) return;
   if (L <= l && r <= R) return push_add(u, l, r, v);  // !!! 忘 return
@@ -102,6 +96,7 @@ void add(int L, int R, int v, int u = 1, int l = 1, int r = n) {
   add(L, R, v, u << 1, l, mid), add(L, R, v, u << 1 | 1, mid + 1, r);
   pushup(u);
 }
+
 void tomin(int L, int R, int v, int u = 1, int l = 1, int r = n) {
   if (R < l || r < L || t[u].mx <= v) return;
   if (L <= l && r <= R && t[u].mx2 < v) return push_min(u, v);  // BUG: 忘了返回
@@ -110,6 +105,7 @@ void tomin(int L, int R, int v, int u = 1, int l = 1, int r = n) {
   tomin(L, R, v, u << 1, l, mid), tomin(L, R, v, u << 1 | 1, mid + 1, r);
   pushup(u);
 }
+
 void tomax(int L, int R, int v, int u = 1, int l = 1, int r = n) {
   if (R < l || r < L || t[u].mn >= v) return;
   if (L <= l && r <= R && t[u].mn2 > v) return push_max(u, v);
@@ -118,6 +114,7 @@ void tomax(int L, int R, int v, int u = 1, int l = 1, int r = n) {
   tomax(L, R, v, u << 1, l, mid), tomax(L, R, v, u << 1 | 1, mid + 1, r);
   pushup(u);
 }
+
 long long qsum(int L, int R, int u = 1, int l = 1, int r = n) {
   if (R < l || r < L) return 0;
   if (L <= l && r <= R) return t[u].sum;
@@ -125,6 +122,7 @@ long long qsum(int L, int R, int u = 1, int l = 1, int r = n) {
   pushdown(u, l, r);
   return qsum(L, R, u << 1, l, mid) + qsum(L, R, u << 1 | 1, mid + 1, r);
 }
+
 long long qmax(int L, int R, int u = 1, int l = 1, int r = n) {
   if (R < l || r < L) return -INF;
   if (L <= l && r <= R) return t[u].mx;
@@ -132,6 +130,7 @@ long long qmax(int L, int R, int u = 1, int l = 1, int r = n) {
   pushdown(u, l, r);
   return max(qmax(L, R, u << 1, l, mid), qmax(L, R, u << 1 | 1, mid + 1, r));
 }
+
 long long qmin(int L, int R, int u = 1, int l = 1, int r = n) {
   if (R < l || r < L) return INF;
   if (L <= l && r <= R) return t[u].mn;
@@ -139,15 +138,17 @@ long long qmin(int L, int R, int u = 1, int l = 1, int r = n) {
   pushdown(u, l, r);
   return min(qmin(L, R, u << 1, l, mid), qmin(L, R, u << 1 | 1, mid + 1, r));
 }
+
 int main() {
-  n = rd();
-  for (int i = 1; i <= n; i++) a[i] = rd();
+  cin.tie(nullptr)->sync_with_stdio(false);
+  cin >> n;
+  for (int i = 1; i <= n; i++) cin >> a[i];
   build();
-  m = rd();
+  cin >> m;
   for (int i = 1; i <= m; i++) {
     int op, l, r, x;
-    op = rd(), l = rd(), r = rd();
-    if (op <= 3) x = rd();  // scanf("%d",&x);
+    cin >> op >> l >> r;
+    if (op <= 3) cin >> x;
     if (op == 1)
       add(l, r, x);
     else if (op == 2)
@@ -155,11 +156,11 @@ int main() {
     else if (op == 3)
       tomin(l, r, x);
     else if (op == 4)
-      printf("%lld\n", qsum(l, r));
+      cout << qsum(l, r) << '\n';
     else if (op == 5)
-      printf("%lld\n", qmax(l, r));
+      cout << qmax(l, r) << '\n';
     else
-      printf("%lld\n", qmin(l, r));
+      cout << qmin(l, r) << '\n';
   }
   return 0;
 }

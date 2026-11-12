@@ -1,15 +1,16 @@
 #include <algorithm>
-#include <cstdio>
+#include <iostream>
 #include <vector>
 
-const int MN = 100005;
+constexpr int MN = 100005;
 
 int N, M, Q, cnt;
 std::vector<int> G[MN], T[MN * 2];
 
 int dfn[MN * 2], low[MN], dfc;
 int stk[MN], tp;
-void Tarjan(int u) {  //求点双，准备建树
+
+void Tarjan(int u) {  // 求点双，准备建树
   low[u] = dfn[u] = ++dfc;
   stk[++tp] = u;
   for (int v : G[u]) {
@@ -32,6 +33,7 @@ void Tarjan(int u) {  //求点双，准备建树
 }
 
 int dep[MN * 2], faz[MN * 2][18], dis[MN * 2];
+
 void DFS(int u, int fz) {
   dfn[u] = ++dfc;
   dep[u] = dep[faz[u][0] = fz] + 1;
@@ -40,7 +42,8 @@ void DFS(int u, int fz) {
   for (int v : T[u])
     if (v != fz) DFS(v, u);
 }
-int LCA(int x, int y) {  //最近公共祖先
+
+int LCA(int x, int y) {  // 最近公共祖先
   if (dep[x] < dep[y]) std::swap(x, y);
   for (int j = 0, d = dep[x] - dep[y]; d; ++j, d >>= 1)
     if (d & 1) x = faz[x][j];
@@ -50,37 +53,41 @@ int LCA(int x, int y) {  //最近公共祖先
   return faz[x][0];
 }
 
+using std::cin;
+using std::cout;
+
 int main() {
+  cin.tie(nullptr)->sync_with_stdio(false);
   int Ti;
-  scanf("%d", &Ti);
+  cin >> Ti;
   while (Ti--) {
-    scanf("%d%d", &N, &M);
+    cin >> N >> M;
     for (int i = 1; i <= N; ++i) {
       G[i].clear();
       dfn[i] = low[i] = 0;
     }
     for (int i = 1; i <= N * 2; ++i) T[i].clear();
     for (int i = 1, x, y; i <= M; ++i) {
-      scanf("%d%d", &x, &y);
+      cin >> x >> y;
       G[x].push_back(y);
       G[y].push_back(x);
     }
     cnt = N;
     dfc = 0, Tarjan(1), --tp;
     dfc = 0, DFS(1, 0);
-    scanf("%d", &Q);
+    cin >> Q;
     while (Q--) {
       static int S, A[MN];
-      scanf("%d", &S);
+      cin >> S;
       int Ans = -2 * S;
-      for (int i = 1; i <= S; ++i) scanf("%d", &A[i]);
+      for (int i = 1; i <= S; ++i) cin >> A[i];
       std::sort(A + 1, A + S + 1, [](int i, int j) { return dfn[i] < dfn[j]; });
       for (int i = 1; i <= S; ++i) {
         int u = A[i], v = A[i % S + 1];
         Ans += dis[u] + dis[v] - 2 * dis[LCA(u, v)];
       }
       if (LCA(A[1], A[S]) <= N) Ans += 2;
-      printf("%d\n", Ans / 2);
+      cout << Ans / 2 << '\n';
     }
   }
   return 0;

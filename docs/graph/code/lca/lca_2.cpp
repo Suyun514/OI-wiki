@@ -1,14 +1,17 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <iostream>
 using namespace std;
 
-const int N = 5e5 + 5;
+constexpr int N = 5e5 + 5;
 
 struct PlusMinusOneRMQ {  // RMQ
   // Copyright (C) 2018 Skqliao. All rights served.
-  const static int M = 9;
+  constexpr static int M = 9;
 
   int blocklen, block, Minv[N], F[N / M * 2 + 5][M << 1], T[N], f[1 << M][M][M],
       S[N];
+
   void init(int n) {  // 初始化
     blocklen = std::max(1, (int)(log(n * 1.0) / log(2.0)) / 2);
     block = n / blocklen + (n % blocklen > 0);
@@ -39,6 +42,7 @@ struct PlusMinusOneRMQ {  // RMQ
       }
     }
   }
+
   void initmin(int a[], int n) {
     for (int i = 0; i < n; i++) {
       if (i % blocklen == 0) {
@@ -63,6 +67,7 @@ struct PlusMinusOneRMQ {  // RMQ
       }
     }
   }
+
   int querymin(int a[], int L, int R) {
     int idl = L / blocklen, idr = R / blocklen;
     if (idl == idr)
@@ -88,18 +93,21 @@ int n, m, s;
 struct Edge {
   int v, nxt;
 } e[N * 2];
+
 int tot, head[N];
+
 void init(int n) {
   tot = 0;
   fill(head, head + n + 1, 0);
 }
+
 void addedge(int u, int v) {  // 加边
   ++tot;
-  e[tot] = (Edge){v, head[u]};
+  e[tot] = Edge{v, head[u]};
   head[u] = tot;
 
   ++tot;
-  e[tot] = (Edge){u, head[v]};
+  e[tot] = Edge{u, head[v]};
   head[v] = tot;
 }
 
@@ -135,12 +143,13 @@ int LCA(int u, int v) {  // 求解LCA，看题解用RMQ的方法
 }
 
 int main() {
-  scanf("%d %d %d", &n, &m, &s);
+  cin.tie(nullptr)->sync_with_stdio(false);
+  cin >> n >> m >> s;
 
   init(n);
   int u, v;
   for (int i = 1; i <= n - 1; ++i) {
-    scanf("%d %d", &u, &v);
+    cin >> u >> v;
     addedge(u, v);
   }
 
@@ -150,8 +159,8 @@ int main() {
   build_lca();
 
   for (int i = 1; i <= m; ++i) {
-    scanf("%d %d", &u, &v);
-    printf("%d\n", LCA(u, v));
+    cin >> u >> v;
+    cout << LCA(u, v) << '\n';
   }
 
   return 0;

@@ -1,11 +1,9 @@
 #include <cctype>
-#include <cstdio>
 #include <cstring>
 #include <iostream>
-
 using namespace std;
 
-const int N = 1000010;
+constexpr int N = 1000010;
 
 char s[N];
 int n, sa[N], id[N], oldrk[N * 2], rk[N * 2], px[N], cnt[N];
@@ -21,13 +19,12 @@ int main() {
   r = n;
 
   for (i = 1; i <= n; ++i)
-    while (!isalpha(s[i] = getchar()))
-      ;
+    while (cin >> s[i], !isalpha(s[i]));
   for (i = 1; i <= n; ++i)
-    rk[i] = rk[2 * n + 2 - i] = s[i];  //拼接正反两个字符串，中间空出一个字符
+    rk[i] = rk[2 * n + 2 - i] = s[i];  // 拼接正反两个字符串，中间空出一个字符
 
   n = 2 * n + 1;
-  //求后缀数组
+  // 求后缀数组
   for (i = 1; i <= n; ++i) ++cnt[rk[i]];
   for (i = 1; i <= m; ++i) cnt[i] += cnt[i - 1];
   for (i = n; i >= 1; --i) sa[cnt[rk[i]]--] = i;
@@ -44,10 +41,10 @@ int main() {
     for (p = 0, i = 1; i <= n; ++i)
       rk[sa[i]] = cmp(sa[i], sa[i - 1], w) ? p : ++p;
   }
-  //利用后缀数组O(1)进行判断
+  // 利用后缀数组O(1)进行判断
   while (l <= r) {
-    printf("%c", rk[l] < rk[n + 1 - r] ? s[l++] : s[r--]);
-    if ((++tot) % 80 == 0) puts("");  //回车
+    cout << (rk[l] < rk[n + 1 - r] ? s[l++] : s[r--]);
+    if ((++tot) % 80 == 0) cout << '\n';  // 回车
   }
 
   return 0;

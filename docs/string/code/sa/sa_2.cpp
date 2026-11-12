@@ -1,11 +1,10 @@
-#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <set>
 
 using namespace std;
 
-const int N = 40010;
+constexpr int N = 40010;
 
 int n, k, a[N], sa[N], rk[N], oldrk[N], id[N], px[N], cnt[1000010], ht[N], ans;
 multiset<int> t;  // multiset 是最好写的实现方式
@@ -15,12 +14,13 @@ bool cmp(int x, int y, int w) {
 }
 
 int main() {
+  cin.tie(nullptr)->sync_with_stdio(false);
   int i, j, w, p, m = 1000000;
 
-  scanf("%d%d", &n, &k);
+  cin >> n >> k;
   --k;
 
-  for (i = 1; i <= n; ++i) scanf("%d", a + i);  //求后缀数组
+  for (i = 1; i <= n; ++i) cin >> a[i];  // 求后缀数组
   for (i = 1; i <= n; ++i) ++cnt[rk[i] = a[i]];
   for (i = 1; i <= m; ++i) cnt[i] += cnt[i - 1];
   for (i = n; i >= 1; --i) sa[cnt[rk[i]]--] = i;
@@ -38,13 +38,13 @@ int main() {
       rk[sa[i]] = cmp(sa[i], sa[i - 1], w) ? p : ++p;
   }
 
-  for (i = 1, j = 0; i <= n; ++i) {  //求 height
+  for (i = 1, j = 0; i <= n; ++i) {  // 求 height
     if (j) --j;
     while (a[i + j] == a[sa[rk[i] - 1] + j]) ++j;
     ht[rk[i]] = j;
   }
 
-  for (i = 1; i <= n; ++i) {  //求所有最小值的最大值
+  for (i = 1; i <= n; ++i) {  // 求所有最小值的最大值
     t.insert(ht[i]);
     if (i > k) t.erase(t.find(ht[i - k]));
     ans = max(ans, *t.begin());

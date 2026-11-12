@@ -1,11 +1,11 @@
 #include <algorithm>
-#include <cstdio>
+#include <iostream>
 #include <set>
 #include <vector>
 
-const int MN = 100005;
-const int MS = 524288;
-const int Inf = 0x7fffffff;
+constexpr int MN = 100005;
+constexpr int MS = 524288;
+constexpr int Inf = 0x7fffffff;
 
 int N, M, Q, cnt;
 int w[MN * 2];
@@ -65,7 +65,7 @@ void DFS1(int u, int fz, int tp) {
 
 int dat[MS];
 
-void Build(int i, int l, int r) {  //建树
+void Build(int i, int l, int r) {  // 建树
   if (l == r) {
     dat[i] = w[idf[l]];
     return;
@@ -74,7 +74,7 @@ void Build(int i, int l, int r) {  //建树
   dat[i] = std::min(dat[li], dat[ri]);
 }
 
-void Mdf(int i, int l, int r, int p, int x) {  //获取最小值
+void Mdf(int i, int l, int r, int p, int x) {  // 获取最小值
   if (l == r) {
     dat[i] = x;
     return;
@@ -86,19 +86,23 @@ void Mdf(int i, int l, int r, int p, int x) {  //获取最小值
   dat[i] = std::min(dat[li], dat[ri]);
 }
 
-int Qur(int i, int l, int r, int a, int b) {  //查询
+int Qur(int i, int l, int r, int a, int b) {  // 查询
   if (r < a || b < l) return Inf;
   if (a <= l && r <= b) return dat[i];
   return std::min(Qur(ls, a, b), Qur(rs, a, b));
 }
 
+using std::cin;
+using std::cout;
+
 int main() {
-  scanf("%d%d%d", &N, &M, &Q);
-  for (int i = 1; i <= N; ++i) scanf("%d", &w[i]);
+  cin.tie(nullptr)->sync_with_stdio(false);
+  cin >> N >> M >> Q;
+  for (int i = 1; i <= N; ++i) cin >> w[i];
   cnt = N;
   for (int i = 1; i <= M; ++i) {
     int u, v;
-    scanf("%d%d", &u, &v);
+    cin >> u >> v;
     G[u].push_back(v);
     G[v].push_back(u);
   }
@@ -110,7 +114,7 @@ int main() {
   for (int q = 1; q <= Q; ++q) {
     char opt[3];
     int x, y;
-    scanf("%s%d%d", opt, &x, &y);
+    cin >> opt >> x >> y;
     if (*opt == 'C') {
       Mdf(1, 1, cnt, dfn[x], y);
       if (faz[x]) {
@@ -133,7 +137,7 @@ int main() {
       if (dfn[x] > dfn[y]) std::swap(x, y);
       Ans = std::min(Ans, Qur(1, 1, cnt, dfn[x], dfn[y]));
       if (x > N) Ans = std::min(Ans, w[faz[x]]);
-      printf("%d\n", Ans);
+      cout << Ans << '\n';
     }
   }
   return 0;
